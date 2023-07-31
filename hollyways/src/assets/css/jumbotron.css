@@ -1,0 +1,56 @@
+.body-bg {
+  background-color: var(--bg);
+  height: 38rem;
+  position: relative;
+  color: #fff;
+}
+
+.jumbo-left {
+  margin-left: 5rem;
+  margin-top: 3rem;
+}
+
+.jumbo-left h1 {
+  font-size: 38px;
+  max-width: 35rem;
+}
+
+.jumbo-left p {
+  margin-top: 2rem;
+  max-width: 35rem;
+  font-size: 18px;
+}
+
+.gambarSatu {
+  position: absolute;
+  margin-top: 3rem;
+  right: 0;
+}
+
+.bottom {
+  position: relative;
+}
+
+.gambarDua {
+  position: absolute;
+  left: 0;
+  top: -100px;
+}
+
+.bottom-right {
+  position: absolute;
+  top: 10rem;
+  left: 33rem;
+}
+.bottom-right {
+  max-width: 50rem;
+}
+.bottom-right h1 {
+  font-size: 38px;
+  max-width: 40rem;
+}
+.bottom-right p {
+  max-width: 20rem;
+  margin-top: 20px;
+  font-size: 15px;
+}

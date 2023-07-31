@@ -1,0 +1,15 @@
+:root {
+  --bg: #c32424;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+label:has(+ input[required])::after {
+  content: "*";
+  color: #c32424;
+}
