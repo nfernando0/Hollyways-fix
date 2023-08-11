@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"io"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
