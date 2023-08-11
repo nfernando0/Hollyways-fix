@@ -11,7 +11,8 @@ type DonatedRepository interface {
 	GetDonated(ID int) (models.Donated, error)
 	UpdateDonated(status string, orderId int) error
 	CreateDonated(donated models.Donated) (models.Donated, error)
-	GetDonatedUser(UserID int) ([]models.Donated, error)
+	GetDonatedByUserID(ID int) ([]models.Donated, error)
+	GetDonatedByFund(ID int) ([]models.Donated, error)
 }
 
 func RepositoryDonated(db *gorm.DB) *repository {
@@ -20,14 +21,14 @@ func RepositoryDonated(db *gorm.DB) *repository {
 
 func (r *repository) FindDonated() ([]models.Donated, error) {
 	var donates []models.Donated
-	err := r.db.Preload("FundDonate").Preload("User").Find(&donates).Error
+	err := r.db.Preload("Fund").Preload("User").Find(&donates).Error
 
 	return donates, err
 }
 
 func (r *repository) GetDonated(ID int) (models.Donated, error) {
 	var donated models.Donated
-	err := r.db.Preload("FundDonate").Preload("User").Order("id DESC").First(&donated, ID).Error
+	err := r.db.Preload("Fund").Preload("User").Order("id DESC").First(&donated, ID).Error
 
 	return donated, err
 }
@@ -38,11 +39,18 @@ func (r *repository) CreateDonated(donated models.Donated) (models.Donated, erro
 	return donated, err
 }
 
-func (r *repository) GetDonatedUser(UserID int) ([]models.Donated, error) {
-	var donates []models.Donated
-	err := r.db.Preload("FundDonate").Preload("User").Where("user_id = ?", UserID).Order("id DESC").Find(&donates).Error
+func (r *repository) GetDonatedByUserID(ID int) ([]models.Donated, error) {
+	var donation []models.Donated
+	err := r.db.Debug().Where("user_id =?", ID).Preload("Fund.User").Preload("User").Find(&donation).Error
 
-	return donates, err
+	return donation, err
+}
+
+func (r *repository) GetDonatedByFund(ID int) ([]models.Donated, error) {
+	var donation []models.Donated
+	err := r.db.Where("fund_id=?", ID).Preload("Fund.User").Preload("User").Find(&donation).Error
+
+	return donation, err
 }
 
 func (r *repository) UpdateDonated(status string, orderId int) error {
@@ -51,7 +59,7 @@ func (r *repository) UpdateDonated(status string, orderId int) error {
 
 	if status != donated.Status && status == "success" {
 		var fund models.Fund
-		r.db.First(&fund, donated.FundID)
+		r.db.First(&fund, donated.FundId)
 		r.db.Save(&fund)
 	}
 

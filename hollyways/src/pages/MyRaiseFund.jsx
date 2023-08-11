@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import MyRaiseFundComponent from '../components/MyRaiseFundComponent'
 import { useQuery } from 'react-query'
 import { API } from '../config/api'
@@ -9,11 +9,24 @@ import { UserContext } from '../context/UserContext'
 
 const MyRaiseFund = () => {
 
-    let { data: fund } = useQuery('fundsss', async () => {
-        const response = await API.get('/fund-user')
-        // console.log(response.data.data)
-        return response.data.data
-    })
+    const [state] = useContext(UserContext)
+
+    const [fund, setFunds] = useState([])
+
+    const getFunds = async () => {
+        try {
+            const response = await API.get(`/fund/user/${state.user.id}`)
+            setFunds(response.data.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        getFunds()
+    }, [])
+
+    console.log(fund)
 
 
     return (
@@ -28,8 +41,8 @@ const MyRaiseFund = () => {
                         <div className='mt-3'>
                             <Container>
                                 <Row>
-                                    {fund?.map((f, index) => (
-                                        <Col key={index}>
+                                    {fund?.map((f) => (
+                                        <Col key={f.id}>
                                             <CardRaiseFund fund={f} />
                                         </Col>
                                     ))}

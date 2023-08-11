@@ -4,7 +4,6 @@ import (
 	"hollyways/database"
 	"hollyways/pkg/mysql"
 	"hollyways/routes"
-	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -31,8 +30,8 @@ func main() {
 	routes.ROuteInit(e.Group("/api/v1"))
 
 	e.Static("/uploads", "./uploads")
-	var PORT = os.Getenv("PORT")
+	// var PORT = os.Getenv("PORT")
 
-	e.Logger.Fatal(e.Start(":" + PORT))
+	e.Logger.Fatal(e.Start(":5000"))
 
 }

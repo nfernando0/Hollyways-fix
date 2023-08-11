@@ -1,0 +1,9 @@
+.raisefund {
+    gap: 20px;
+  display: flex;
+}
+@media screen and (max-width: 768px) {
+  .raisefund {
+    flex-direction: column;
+  }
+}

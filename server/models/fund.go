@@ -1,37 +1,29 @@
 package models
 
+import "time"
+
 type Fund struct {
-	Id          int       `json:"id" gorm:"primary_key:auto_increment"`
-	Title       string    `json:"title" form:"title" gorm:"type: varchar(255)"`
-	Image       string    `json:"image" form:"image" gorm:"type: varchar(255)"`
-	Donation    int       `json:"donation" form:"donation" gorm:"type: int"`
-	Description string    `json:"description" form:"description" gorm:"type: varchar(255)"`
-	UserID      int       `json:"user_id"`
-	User        UserFund  `json:"user" gorm:"foreignKey:UserID"`
-	DonatedID   int       `json:"donated_id"`
-	Donated     []Donated `json:"donated"`
+	Id          int               `json:"id" gorm:"primary_key:auto_increment"`
+	Title       string            `json:"title" form:"title" gorm:"varchar(255)"`
+	Image       string            `json:"image" form:"image" gorm:"varchar(255)"`
+	Donation    int               `json:"donation" form:"donation" gorm:"varchar(255)"`
+	Description string            `json:"description" form:"description" gorm:"varchar(255)"`
+	UserId      int               `json:"user_id"`
+	User        UserResponse      `json:"user"`
+	Donateds    []DonatedResponse `json:"donateds" gorm:"foreignKey:UserId"`
+	CreateAt    time.Time         `json:"create_at"`
 }
 
-type FundDonate struct {
-	Id          int        `json:"id"`
-	UserID      int        `json:"user_id"`
-	DonatedID   int        `json:"donated_id"`
-	User        UserDonate `json:"-"`
-	Title       string     `json:"title"`
-	Description string     `json:"description"`
-}
-
-type FunDonateResp struct {
+type FundResponse struct {
 	Id          int    `json:"id"`
-	UserID      int    `json:"user_id"`
 	Title       string `json:"title"`
+	Image       string `json:"image"`
+	UserId      int    `json:"user_id"`
+	User        User   `json:"-"`
+	Donation    int    `json:"donation"`
 	Description string `json:"description"`
 }
 
-func (FunDonateResp) TableName() string {
-	return "funds"
-}
-
-func (FundDonate) TableName() string {
+func (FundResponse) TableName() string {
 	return "funds"
 }

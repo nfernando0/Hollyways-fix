@@ -8,7 +8,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 function AddFundraisingComponent() {
 
     const navigate = useNavigate()
-
+    const [preview, setPreview] = useState(null)
     const [form, setForm] = useState({
         title: '',
         image: '',
@@ -24,13 +24,19 @@ function AddFundraisingComponent() {
         try {
             e.preventDefault()
 
+            const config = {
+                headers: {
+                    'Content-type': 'multipart/form-data',
+                },
+            };
+
             const formData = new FormData();
             formData.set('title', title)
-            formData.set('image', image)
+            // formData.set('image', image[0], image[0].title);
             formData.set('donation', donation)
             formData.set('description', description)
 
-            const response = await API.post('/fund', formData)
+            const response = await API.post('/fund', formData, config)
             console.log("data", response)
 
             navigate('/')
@@ -50,7 +56,7 @@ function AddFundraisingComponent() {
         setForm({
             ...form,
             [e.target.name]: e.target.value,
-        });
+        })
     }
 
     return (
@@ -67,8 +73,9 @@ function AddFundraisingComponent() {
                             <Form.Group className="mb-3" controlId="title">
                                 <Form.Control onChange={handleChange} value={title} type="text" name='title' placeholder="Title" />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="title">
-                                <input type="file" id="formFile" />
+                            <img src={preview} width={200} className='my-3' alt="" />
+                            <Form.Group className="mb-3" controlId=" image">
+                                <input type="file" id="formFile" name='image' onChange={handleChange} />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="donation">
                                 <Form.Control type="text" name='donation' onChange={handleChange} value={donation} placeholder="Goals" />

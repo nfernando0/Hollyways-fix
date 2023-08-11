@@ -1,17 +1,28 @@
 import { FormatRupiah } from '@arismun/format-rupiah'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Card } from 'react-bootstrap'
 
 function MyRaiseFundComponent(funds) {
 
+  // const hitungTotalBayar = funds.funds.donate_amount
+  // console.log(hitungTotalBayar)
+
+  // const totalDonasi = hitungTotalBayar.reduce(function (result, item) {
+  //   return result + item.donate_amount
+  // }, 0)
+
+
+
+
 
   return (
     <div>
-      <Card className='w-100 gap-2 mb-2'>
+      <Card className='mb-2'>
         <Card.Body>
-          <h5>{funds?.funds?.user?.username}</h5>
-          <p style={{ color: 'var(--bg)' }}>Total:
-            {<FormatRupiah value={funds?.funds?.donate_amount} />}
+          <h5>{funds.funds.user.fullname}</h5>
+          <p>Saturday, 10 August 2023</p>
+          <p style={{ color: 'var(--bg)' }} className='fw-bold'>Total:
+            {<FormatRupiah value={funds.funds.donate_amount} />}
           </p>
         </Card.Body>
       </Card>

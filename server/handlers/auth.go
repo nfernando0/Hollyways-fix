@@ -55,7 +55,7 @@ func (h *handlerAuth) Register(c echo.Context) error {
 func (h *handlerAuth) Login(c echo.Context) error {
 	request := new(authdto.AuthRequest)
 	if err := c.Bind(request); err != nil {
-		return c.JSON(http.StatusBadRequest, resultdto.ErrorResult{Code: http.StatusBadRequest})
+		return c.JSON(http.StatusBadRequest, resultdto.ErrorResult{Code: http.StatusBadRequest, Message: "error bind"})
 	}
 	user := models.User{
 		Email:    request.Email,
@@ -63,7 +63,7 @@ func (h *handlerAuth) Login(c echo.Context) error {
 	}
 	user, err := h.AuthRepository.Login(user.Email)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, resultdto.ErrorResult{Code: http.StatusBadRequest})
+		return c.JSON(http.StatusBadRequest, resultdto.ErrorResult{Code: http.StatusBadRequest, Message: "error login"})
 	}
 
 	isValid := bcrypt.CheckPasswordHash(request.Password, user.Password)
@@ -72,11 +72,11 @@ func (h *handlerAuth) Login(c echo.Context) error {
 	}
 
 	claims := jwt.MapClaims{}
-	claims["id"] = user.ID
+	claims["id"] = user.Id
 	claims["exp"] = time.Now().Add(time.Hour * 2).Unix()
 	token, errGenerateToken := jwtToken.GenerateToken(&claims)
 	if errGenerateToken != nil {
-		return c.JSON(http.StatusBadRequest, resultdto.ErrorResult{Code: http.StatusBadRequest})
+		return c.JSON(http.StatusBadRequest, resultdto.ErrorResult{Code: http.StatusBadRequest, Message: "error generate token"})
 	}
 
 	loginResponse := authdto.LoginResponse{

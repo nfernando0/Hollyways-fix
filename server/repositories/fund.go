@@ -10,8 +10,7 @@ type FundRepository interface {
 	FindFund() ([]models.Fund, error)
 	GetFund(ID int) (models.Fund, error)
 	CreateFund(fund models.Fund) (models.Fund, error)
-	GetFundUser(UserID int) ([]models.Fund, error)
-	GetFundDonate(DonatedID int) ([]models.Fund, error)
+	GetFundById(ID int) ([]models.Fund, error)
 }
 
 func RepositoryFund(db *gorm.DB) *repository {
@@ -20,14 +19,14 @@ func RepositoryFund(db *gorm.DB) *repository {
 
 func (r *repository) FindFund() ([]models.Fund, error) {
 	var funds []models.Fund
-	err := r.db.Preload("Donated").Preload("User.Profile").Preload("Donated.User").Find(&funds).Error
+	err := r.db.Preload("Donateds").Find(&funds).Error
 
 	return funds, err
 }
 
 func (r *repository) GetFund(ID int) (models.Fund, error) {
 	var fund models.Fund
-	err := r.db.Preload("Donated").Preload("User.Profile").Preload("Donated.User").First(&fund, ID).Error
+	err := r.db.Preload("Donateds").First(&fund, ID).Error
 
 	return fund, err
 }
@@ -38,16 +37,9 @@ func (r *repository) CreateFund(fund models.Fund) (models.Fund, error) {
 	return fund, err
 }
 
-func (r *repository) GetFundUser(UserID int) ([]models.Fund, error) {
-	var funds []models.Fund
-	err := r.db.Preload("Donated").Preload("User.Profile").Preload("Donated.User").Where("user_id = ?", UserID).Order("id DESC").Find(&funds).Error
+func (r *repository) GetFundById(ID int) ([]models.Fund, error) {
+	var fund []models.Fund
+	err := r.db.Where("user_id = ?", ID).Preload("Donateds").Find(&fund).Error
 
-	return funds, err
-}
-
-func (r *repository) GetFundDonate(DonatedID int) ([]models.Fund, error) {
-	var funds []models.Fund
-	err := r.db.Preload("Donated").Preload("User").Preload("Donated.User").Where("donated_id = ?", DonatedID).Or("user_id = ?", DonatedID).Preload("Donated").Order("id DESC").Find(&funds).Error
-
-	return funds, err
+	return fund, err
 }

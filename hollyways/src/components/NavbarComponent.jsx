@@ -48,7 +48,7 @@ function NavbarComponent() {
                     </Navbar.Brand>
                     {state.isLogin ? (
                         <Dropdown>
-                            <Dropdown.Toggle variant='transparent' className='gap-2 d-flex align-items-center' style={{ border: "none" }}>
+                            <Dropdown.Toggle variant='transparent' className='gap-2 d-flex align-items-center' style={{ border: "none" }} id="dropdown-menu-align-end">
                                 {/* <h4 style={{ color: '#ffffff' }}>{state.user.username}</h4> */}
                                 <img src={User} alt="" />
                             </Dropdown.Toggle>

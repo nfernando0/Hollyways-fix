@@ -1,38 +1,21 @@
 package models
 
 type User struct {
-	ID       int       `json:"id" gorm:"primary_key:auto_increment"`
-	Fullname string    `json:"fullname" form:"fullname" gorm:"type: varchar(255)"`
-	Username string    `json:"username" form:"username" gorm:"type: varchar(255)"`
-	Email    string    `json:"email" form:"email" gorm:"type: varchar(255)"`
-	Phone    string    `json:"phone" form:"phone" gorm:"type: varchar(255)"`
-	Password string    `json:"password" form:"password" gorm:"type: varchar(255)"`
-	Profile  Profile   `json:"profile"`
-	FundID   int       `json:"fund_id"`
-	Fund     []Fund    `json:"fund"`
-	Donated  []Donated `json:"donate"`
+	Id       int               `json:"id" gorm:"primary_key:auto_increment"`
+	Fullname string            `json:"fullname" form:"fullname" gorm:"varchar(255)"`
+	Username string            `json:"username" form:"username" gorm:"varchar(255)"`
+	Email    string            `json:"email" form:"email" gorm:"varchar(255)"`
+	Password string            `json:"password" form:"password" gorm:"varchar(255)"`
+	Donateds []DonatedResponse `json:"donateds" gorm:"foreignKey:UserId"`
+	Funds    []FundResponse            `json:"funds" gorm:"foreignKey:UserId"`
 }
 
-type UserFund struct {
-	ID        int     `json:"id" gorm:"primary_key:auto_increment"`
-	ProfileID int     `json:"-"`
-	Profile   Profile `json:"-"`
-	Username  string  `json:"username" form:"username" gorm:"type: varchar(255)"`
-	Email     string  `json:"email" form:"email" gorm:"type: varchar(255)"`
-	Phone     string  `json:"phone" form:"phone" gorm:"type: varchar(255)"`
+type UserResponse struct {
+	Id       int    `json:"id" gorm:"primary_key:auto_increment"`
+	Fullname string `json:"fullname" form:"fullname" gorm:"varchar(255)"`
+	Email    string `json:"email" form:"email" gorm:"varchar(255)"`
 }
 
-type UserDonate struct {
-	ID       int    `json:"id" gorm:"primary_key:auto_increment"`
-	Username string `json:"username" form:"username" gorm:"type: varchar(255)"`
-	Email    string `json:"email" form:"email" gorm:"type: varchar(255)"`
-	Phone    string `json:"phone" form:"phone" gorm:"type: varchar(255)"`
-}
-
-func (UserDonate) TableName() string {
-	return "users"
-}
-
-func (UserFund) TableName() string {
+func (UserResponse) TableName() string {
 	return "users"
 }

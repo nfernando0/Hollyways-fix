@@ -16,6 +16,7 @@ func DonatedRoute(e *echo.Group) {
 	e.GET("/donateds", h.FindDonated)
 	e.GET("/donated/:id", h.GetDonated)
 	e.POST("/donated", middleware.Auth(h.CreateDonated))
-	e.GET("/donated-user", middleware.Auth(h.GetDonatedUser))
+	e.GET("/donated/user/:id", middleware.Auth(h.GetDonatedByUserID))
+	e.GET("/donated/fund/:id", middleware.Auth(h.GetDonatedByFund))
 	e.POST("/notification", h.Notification)
 }

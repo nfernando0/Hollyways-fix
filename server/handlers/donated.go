@@ -46,14 +46,12 @@ func (h *handlerDonated) GetDonated(c echo.Context) error {
 
 func (h *handlerDonated) CreateDonated(c echo.Context) error {
 
-	
-
 	var donatedIsMatch = false
 	var donatedId int
 	for !donatedIsMatch {
 		donatedId = int(time.Now().Unix())
 		donatedData, _ := h.DonatedRepository.GetDonated(donatedId)
-		if donatedData.ID == 0 {
+		if donatedData.Id == 0 {
 			donatedIsMatch = true
 		}
 	}
@@ -66,9 +64,9 @@ func (h *handlerDonated) CreateDonated(c echo.Context) error {
 	donateInt, _ := strconv.Atoi(donateAmount)
 
 	donated := models.Donated{
-		ID:           donatedId,
-		UserID:       int(userID),
-		FundID:       fundid,
+		Id:           donatedId,
+		UserId:       int(userID),
+		FundId:       fundid,
 		DonateAmount: donateInt,
 	}
 	donated, err := h.DonatedRepository.CreateDonated(donated)
@@ -84,14 +82,14 @@ func (h *handlerDonated) CreateDonated(c echo.Context) error {
 	// 2. Initiate Snap request param
 	req := &snap.Request{
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID:  strconv.Itoa(donated.ID),
+			OrderID:  strconv.Itoa(donated.Id),
 			GrossAmt: int64(donated.DonateAmount),
 		},
 		CreditCard: &snap.CreditCardDetails{
 			Secure: true,
 		},
 		CustomerDetail: &midtrans.CustomerDetails{
-			FName: donated.User.Username,
+			FName: donated.User.Fullname,
 			Email: donated.User.Email,
 		},
 	}
@@ -100,19 +98,24 @@ func (h *handlerDonated) CreateDonated(c echo.Context) error {
 	return c.JSON(http.StatusOK, resultdto.SuccessResult{Data: snapResp})
 }
 
-func (h *handlerDonated) GetDonatedUser(c echo.Context) error {
-	userLogin := c.Get("userLogin")
-	userId := int(userLogin.(jwt.MapClaims)["id"].(float64))
-
-	donated, err := h.DonatedRepository.GetDonatedUser(userId)
-
+func (h *handlerDonated) GetDonatedByUserID(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	donated, err := h.DonatedRepository.GetDonatedByUserID(id)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, resultdto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()})
+		return c.JSON(http.StatusBadRequest, resultdto.ErrorResult{})
+	}
+	return c.JSON(http.StatusOK, resultdto.SuccessResult{Data: donated})
+}
+
+func (h *handlerDonated) GetDonatedByFund(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	donated, err := h.DonatedRepository.GetDonatedByFund(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, resultdto.ErrorResult{})
 	}
 
 	return c.JSON(http.StatusOK, resultdto.SuccessResult{Data: donated})
 }
-
 func (h *handlerDonated) Notification(c echo.Context) error {
 	var notificationPayload map[string]interface{}
 
@@ -124,10 +127,9 @@ func (h *handlerDonated) Notification(c echo.Context) error {
 	fraudStatus := notificationPayload["fraud_status"].(string)
 	orderId := notificationPayload["order_id"].(string)
 
-	
 	fmt.Print("ini payloadnya", notificationPayload)
 	order_id, _ := strconv.Atoi(orderId)
-	
+
 	donated, _ := h.DonatedRepository.GetDonated(order_id)
 	if transactionStatus == "capture" {
 		if fraudStatus == "challenge" {
@@ -166,7 +168,7 @@ func SendMail(status string, donated models.Donated) {
 		var CONFIG_AUTH_EMAIL = os.Getenv("EMAIL_SYSTEM")
 		var CONFIG_AUTH_PASSWORD = os.Getenv("PASSWORD_SYSTEM")
 
-		var Name = donated.User.Username
+		var Name = donated.User.Fullname
 		var donate_amount = strconv.Itoa(donated.DonateAmount)
 
 		mailer := gomail.NewMessage()

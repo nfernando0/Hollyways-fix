@@ -1,5 +1,19 @@
+.myprofile {
+  display: flex;
+  gap: 10px;
+}
+
 .profile {
-  /* background-color: aqua; */
-  position: fixed;
-  height: 100vh;
+  display: flex;
+}
+@media screen and (max-width: 768px) {
+  .myprofile {
+    flex-direction: column !important;
+  }
+  .profile {
+    flex-direction: column !important;
+  }
+  .profile img {
+    margin: 20px auto;
+  }
 }

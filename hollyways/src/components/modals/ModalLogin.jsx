@@ -41,7 +41,7 @@ const ModalLogin = ({ show, onHide }) => {
       e.preventDefault()
 
       const response = await API.post("/login", form)
-      console.log("Login", response)
+      // console.log("Login", response)
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: response.data.data
