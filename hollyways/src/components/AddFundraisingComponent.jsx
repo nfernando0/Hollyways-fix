@@ -32,7 +32,7 @@ function AddFundraisingComponent() {
 
             const formData = new FormData();
             formData.set('title', title)
-            // formData.set('image', image[0], image[0].title);
+            formData.set('image', image[0], image[0].title);
             formData.set('donation', donation)
             formData.set('description', description)
 
@@ -55,9 +55,16 @@ function AddFundraisingComponent() {
     const handleChange = (e) => {
         setForm({
             ...form,
-            [e.target.name]: e.target.value,
-        })
-    }
+            [e.target.name]:
+                e.target.type === 'file' ? e.target.files : e.target.value,
+        });
+
+        // Create image url for preview
+        if (e.target.type === 'file') {
+            let url = URL.createObjectURL(e.target.files[0]);
+            setPreview(url);
+        }
+    };
 
     return (
         <div className='mt-5'>

@@ -15,6 +15,7 @@ func FundRoute(e *echo.Group) {
 
 	e.GET("/funds", h.FindFund)
 	e.GET("/fund/:id", h.GetFund)
-	e.POST("/fund", middleware.Auth(h.CreateFund))
+	// e.POST("/fund", middleware.Auth(h.CreateFund))
+	e.POST("/fund", middleware.Auth(middleware.UploadFile(h.CreateFund)))
 	e.GET("/fund/user/:id", middleware.Auth(h.GetFundById))
 }

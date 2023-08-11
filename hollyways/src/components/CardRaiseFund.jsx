@@ -31,7 +31,7 @@ const MyRaiseFundComponent = ({ fund }) => {
             <Col>
                 <Card>
                     <Card.Body style={{ padding: '0' }}>
-                        <Card.Img variant="top" src={Fund} style={{ padding: '0', margin: '0' }} />
+                        <Card.Img variant="top" src={fund?.image} style={{ padding: '0', margin: '0' }} />
                         <div style={{ padding: '1rem' }}>
                             <h4 className='fw-bold'>{fund.title}</h4>
                             <p style={{ Color: '#ddd', marginTop: '0.5rem', marginBottom: '1rem' }}>{fund?.description}</p>

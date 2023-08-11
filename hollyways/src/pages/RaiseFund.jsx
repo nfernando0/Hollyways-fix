@@ -82,13 +82,15 @@ const RaiseFund = () => {
 
     const persentaseTerkumpul = (total / donation) * 100
 
+
+
     return (
         <div className='mt-5'>
             <Container>
                 <Row>
                     <div className="raisefund">
                         <Col>
-                            <img src={Fund} alt="" width={'100%'} />
+                            <img src={funds.image} alt="" width={'100%'} />
                         </Col>
                         <Col>
                             <h1 className='f-bold mb-3'>{funds?.title}</h1>
